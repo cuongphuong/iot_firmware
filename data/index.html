@@ -141,12 +141,8 @@
         </fieldset>
         <fieldset>
           <legend><span class="number">2</span> Bkynk info</legend>
-          <input
-            type="text"
-            name="token"
-            id="token"
-            placeholder="Blynk token *"
-          />
+          <input type="text" name="token" id="token" placeholder="Blynk token *" />
+          <input type="text" name="webhook" id="webhook" placeholder="Slack webhook URL" />
         </fieldset>
         <input type="submit" value="Lưu thông tin" onclick="saveConfigInfo()" />
         <input type="submit" class="exit" value="Thoát" onclick="exit()" />
@@ -167,6 +163,7 @@
         .then((res) => {
           document.getElementById("pass").value = res.password;
           document.getElementById("token").value = res.blynkToken;
+          document.getElementById("webhook").value = res.webhook;
 
           let option = document.createElement("option");
           option.value = res.ssid;
@@ -188,6 +185,7 @@
       formData.ssid = document.getElementById("ssid").value;
       formData.password = document.getElementById("pass").value;
       formData.blynkToken = document.getElementById("token").value;
+      formData.webhook = document.getElementById("webhook").value;
 
       fetch("/api/save-config", {
         method: "POST",
