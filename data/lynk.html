@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Cài đặt thiết bị</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    .form-group {
+      margin-top: 5px;
+    }
+
+    .tab-container {
+      overflow: hidden;
+      background-color: #f1f1f1;
+      padding: 2px;
+      padding-bottom: 7px;
+      margin-bottom: 16px;
+    }
+
+    .tablinks {
+      background-color: #ddd;
+      margin-top: 5px;
+      margin-left: 5px;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 10px 20px;
+      transition: background-color 0.3s;
+    }
+
+    .tablinks:hover {
+      background-color: #bbb;
+    }
+
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      border-top: none;
+    }
+
+    .active {
+      background-color: #ccc;
+    }
+
+    .tab {
+      display: none;
+    }
+
+    .tab-view {
+      margin-top: 5px;
+      padding-bottom: 10px;
+      background-color: #f1f1f1;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    ul {
+      margin: 2px 0px;
+      margin-bottom: 10px;
+    }
+
+    ul>li {
+      padding: 2px 0px;
+    }
+
+    .button-fixed1 {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .button-fixed2 {
+      position: absolute;
+      top: 10px;
+      right: 90px;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      background-color: rgba(0, 0, 0, 0.4);
+      padding-top: 20px;
+    }
+
+    .modal-content {
+      background-color: #f1f1f1;
+      margin: 2% auto;
+      padding: 10px;
+      border: 1px solid #f0f0f0;
+      width: 90%;
+      position: relative;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      top: 0px;
+      right: 9px;
+      position: absolute;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-table {
+      height: 26px;
+      width: 39px;
+      position: absolute;
+      top: 5px;
+      cursor: pointer;
+    }
+
+    .btn-tmp {
+      background-color: rgb(161, 194, 195);
+      border: solid 1px green;
+    }
+
+    .btn-left {
+      left: 50px
+    }
+
+    .btn-right {
+      left: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tab-container" style="border: solid 1px;">
+    <button class="tablinks active" onclick="openTab(event, 'tab1')">Load device</button>
+    <button class="tablinks" onclick="openTab(event, 'tab2')">Button</button>
+    <button class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
+  </div>
+
+  <div class="tab-view">
+    <div id="tab1" class="tab">
+      <div class="form">
+        <div style="margin-top: 16px; position: relative; border: solid 1px; padding: 10px;">
+          <h3 style="margin: 0 0 15px;">Load device list</h3>
+          <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
+          <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
+          <div style="overflow-x: scroll;">
+            <table>
+              <colgroup>
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 95px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>IP(v4)</th>
+                  <th>-</th>
+                </tr>
+              </thead>
+              <tbody id="added_device_table_id">
+                <tr>
+                  <td class="added_device_name_clss">${item.name}</td>
+                  <td>${item.ipAddress}</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="added_device_name_clss">${item.name}</td>
+                  <td>${item.ipAddress}</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab2" class="tab">
+      <div class="form">
+        <div style="margin-top: 16px; position: relative; border: solid 1px; padding: 10px;">
+          <h3 style="margin: 0 0 15px;">Button list</h3>
+          <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
+          <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
+          <div style="overflow-x: scroll;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>IP(v4)</th>
+                  <th>-</th>
+                </tr>
+              </thead>
+              <tbody id="added_device_table_id">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab3" class="tab">
+      <div class="form">
+        <div style="margin-top: 16px; position: relative; border: solid 1px; padding: 10px;">
+          <h3 style="margin: 0 0 15px;">Sensor list</h3>
+          <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
+          <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
+          <div style="overflow-x: scroll;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>IP(v4)</th>
+                  <th>-</th>
+                </tr>
+              </thead>
+              <tbody id="added_device_table_id">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button style="margin-top: 10px" onclick="">Lưu danh sách</button>
+  </div>
+
+  <!-- Modal add -->
+  <div id="addableModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('addableModal')">&times;</span>
+      <div style="margin-top: 16px; border: solid 1px; padding: 10px;">
+        <table border="1">
+          <thead>
+            <tr>
+              <th>-</th>
+              <th>Name</th>
+              <th>IPv4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="scan-loadding">
+              <td colspan="3"><i style="cursor: pointer;" class="fas fa-robot">Đang quét, vui lòng
+                  chờ...</i></td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="device1"></td>
+              <td>L_PRS_LYNK0001</td>
+              <td>
+                <input type="text" name="ip1" value="192.168.1.1">
+                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="device2"></td>
+              <td>L_PRS_LYNK0002</td>
+              <td>
+                <input type="text" name="ip2" value="192.168.1.2">
+                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="device3"></td>
+              <td>L_PRS_LYNK0003</td>
+              <td>
+                <input type="text" name="ip3" value="192.168.1.3">
+                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <input onclick="" type="submit" value="Thêm">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal edit -->
+  <div id="editableModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('editableModal')">&times;</span>
+      <div style="margin-top: 16px; border: solid 1px; padding: 10px;">
+        <div class="form">
+          <div class="form-group">
+            <label for="add_device_user">Tên wifi (Thiết bị sẽ kết nối)</label><br>
+            <input type="text" placeholder="Sieusayza" id="add_device_user">
+          </div>
+          <div class="form-group">
+            <label for="add_device_password">Mật khẩu</label><br>
+            <input type="password" placeholder="***" id="add_device_password">
+          </div>
+          <div class="form-group">
+            <label for="add_device_sip">Địa chỉ IP (v4)</label><br>
+            <input type="text" placeholder="192.168.1.100" id="add_device_sip">
+          </div>
+          <div class="form-group">
+            <label for="add_device_gateway">Gateway</label><br>
+            <input type="text" placeholder="192.168.1.1" id="add_device_gateway">
+          </div>
+          <div class="form-group">
+            <label for="add_device_submark">Submet Mark</label><br>
+            <input type="text" placeholder="255.255.255.0" id="add_device_submark">
+          </div>
+          <br>
+          <input onclick="onCheckInputDataForLynkDevice()" type="submit" value="Kiểm tra">
+          <input onclick="saveLynkDeviceInfoOnClick()" type="submit" value="Lưu thông tin">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    /** Const defind **/
+    const LOAD_DEVICE_PREFIX = "L_LOAD";
+    const BUTTON_DEVICE_PREFIX = "L_PRS";
+    const SENSOR_DEVICE_PREFIX = "L_SER";
+
+    /** DOM processed **/
+    document.getElementById("tab1").style.display = "block";
+
+    /**
+     * Setting when switch tab
+     */
+    function openTab(evt, tabName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tab");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+    /**
+     * Open Modal
+     */
+    function openModal(id) {
+      document.getElementById(id).style.display = "block";
+    }
+
+    /**
+     * Close Modal
+     */
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    /**
+     * Screen has been loaded
+     */
+    document.addEventListener("DOMContentLoaded", function (event) {
+      initialize();
+    });
+
+    /**
+     * Get data when init screen
+     */
+    function initialize() {
+
+      // Get main-device info
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/api/main-device-info');
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+
+        }
+      };
+
+      /**  Send **/
+      xhr.send();
+    }
+  </script>
+</body>
+
+</html>
