@@ -160,6 +160,7 @@
     <button class="tablinks active" onclick="openTab(event, 'tab1')">Load device</button>
     <button class="tablinks" onclick="openTab(event, 'tab2')">Button</button>
     <button class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
+    <input type="hidden" id="tab-selected" value="tab1" />
   </div>
 
   <div class="tab-view">
@@ -319,7 +320,7 @@
           </tbody>
         </table>
         <br>
-        <input id="add-button-id" onclick="" type="submit" value="Thêm">
+        <input id="add-button-id" onclick="addDeviceIntoStagedList()" type="submit" value="Thêm">
       </div>
     </div>
   </div>
@@ -398,13 +399,14 @@
         }
 
         document.getElementById("scan-table-output-id").innerHTML = "";
+        document.getElementById("add-button-id").removeAttribute("disabled");
         response.data.forEach(element => {
           let rowTemplate = `
             <tr>
-              <td><input type="checkbox" id="ck_${element.SSID}" name="${element.SSID}"></td>
+              <td><input type="checkbox" name="add-checkbox" id="ck_${element.SSID}" data-name="${element.SSID}"></td>
               <td><label style="cursor: pointer" for="ck_${element.SSID}">${element.SSID}</label></td>
               <td>
-                <input type="text" class="${element.SSID}" style="width: 100px">
+                <input type="text" id="ipv4_${element.SSID}" style="width: 100px">
                 <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
               </td>
             </tr>`
@@ -421,6 +423,22 @@
       );
     }
 
+    function addDeviceIntoStagedList() {
+      let tabDestination = document.getElementById("tab-selected").value;
+      let checkedBoxes = document.querySelectorAll('input[name=add-checkbox]:checked');
+
+      checkedBoxes.forEach(function(checked) {
+        let name = checked.getAttribute("data-name");
+        let ip = document.getElementById(`ipv4_${name}`).value;
+        console.log(name, ip);
+      });
+
+
+      if (tabDestination === "tab1") {
+        
+      }
+    }
+
     /**************** PRIVATE *******************/
     function openTab(evt, tabName) {
       var i, tabcontent, tablinks;
@@ -433,6 +451,7 @@
         tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
       document.getElementById(tabName).style.display = "block";
+      document.getElementById("tab-selected").value = tabName;
       evt.currentTarget.className += " active";
     }
 
