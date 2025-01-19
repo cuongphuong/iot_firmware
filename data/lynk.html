@@ -173,28 +173,28 @@
             <table>
               <colgroup>
                 <col style="width: auto;">
-                <col style="width: auto;">
+                <col style="width: 120px;">
                 <col style="width: 95px;">
               </colgroup>
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>IP(v4)</th>
-                  <th>-</th>
+                  <th>　　　　　</th>
                 </tr>
               </thead>
               <tbody id="added_device_table_id">
                 <tr>
-                  <td class="added_device_name_clss">${item.name}</td>
-                  <td>${item.ipAddress}</td>
+                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
+                  <td>192.168.121.121</td>
                   <td style="position: relative">
                     <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
                     <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
                   </td>
                 </tr>
                 <tr>
-                  <td class="added_device_name_clss">${item.name}</td>
-                  <td>${item.ipAddress}</td>
+                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
+                  <td>192.168.121.121</td>
                   <td style="position: relative">
                     <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
                     <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
@@ -215,14 +215,35 @@
           <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
           <div style="overflow-x: scroll;">
             <table>
+              <colgroup>
+                <col style="width: auto;">
+                <col style="width: 120px;">
+                <col style="width: 95px;">
+              </colgroup>
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>IP(v4)</th>
-                  <th>-</th>
+                  <th>　　　　　</th>
                 </tr>
               </thead>
               <tbody id="added_device_table_id">
+                <tr>
+                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
+                  <td>192.168.121.121</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
+                  <td>192.168.121.121</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -238,14 +259,35 @@
           <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
           <div style="overflow-x: scroll;">
             <table>
+              <colgroup>
+                <col style="width: auto;">
+                <col style="width: 120px;">
+                <col style="width: 95px;">
+              </colgroup>
               <thead>
                 <tr>
                   <th>Name</th>
                   <th>IP(v4)</th>
-                  <th>-</th>
+                  <th>　　　　　</th>
                 </tr>
               </thead>
               <tbody id="added_device_table_id">
+                <tr>
+                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
+                  <td>192.168.121.121</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
+                  <td>192.168.121.121</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
+                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -261,6 +303,11 @@
       <span class="close" onclick="closeModal('addableModal')">&times;</span>
       <div style="margin-top: 16px; border: solid 1px; padding: 10px;">
         <table border="1">
+          <colgroup>
+            <col style="width: 40px;">
+            <col style="width: 120px;">
+            <col style="width: 120px;">
+          </colgroup>
           <thead>
             <tr>
               <th>-</th>
@@ -268,39 +315,11 @@
               <th>IPv4</th>
             </tr>
           </thead>
-          <tbody>
-            <tr id="scan-loadding">
-              <td colspan="3"><i style="cursor: pointer;" class="fas fa-robot">Đang quét, vui lòng
-                  chờ...</i></td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" name="device1"></td>
-              <td>L_PRS_LYNK0001</td>
-              <td>
-                <input type="text" name="ip1" value="192.168.1.1">
-                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" name="device2"></td>
-              <td>L_PRS_LYNK0002</td>
-              <td>
-                <input type="text" name="ip2" value="192.168.1.2">
-                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
-              </td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" name="device3"></td>
-              <td>L_PRS_LYNK0003</td>
-              <td>
-                <input type="text" name="ip3" value="192.168.1.3">
-                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
-              </td>
-            </tr>
+          <tbody id="scan-table-output-id">
           </tbody>
         </table>
         <br>
-        <input onclick="" type="submit" value="Thêm">
+        <input id="add-button-id" onclick="" type="submit" value="Thêm">
       </div>
     </div>
   </div>
@@ -346,12 +365,63 @@
     const BUTTON_DEVICE_PREFIX = "L_PRS";
     const SENSOR_DEVICE_PREFIX = "L_SER";
 
-    /** DOM processed **/
-    document.getElementById("tab1").style.display = "block";
+    document.addEventListener("DOMContentLoaded", function (event) {
+      document.getElementById("tab1").style.display = "block";
+      initialize();
+    });
 
-    /**
-     * Setting when switch tab
-     */
+    function initialize() {
+
+    }
+
+    async function getScanNetwork() {
+      // Reset last scanning
+      let numberOfCheck = 0;
+
+      // Start scanning
+      fetch("/lynk/v2/start-scan-network", { method: "GET" });
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Check scan result
+      while (true) {
+        if (numberOfCheck == 5) {
+          alert("Scan result failed, please try again.");
+          break;
+        }
+
+        // Get the network from API
+        const response = await fetchToCheckNetwork();
+        if (response.data == null) {
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+          numberOfCheck++;
+          continue;
+        }
+
+        document.getElementById("scan-table-output-id").innerHTML = "";
+        response.data.forEach(element => {
+          let rowTemplate = `
+            <tr>
+              <td><input type="checkbox" id="ck_${element.SSID}" name="${element.SSID}"></td>
+              <td><label style="cursor: pointer" for="ck_${element.SSID}">${element.SSID}</label></td>
+              <td>
+                <input type="text" class="${element.SSID}" style="width: 100px">
+                <i style="cursor: pointer; text-decoration: underline;" class="fas fa-robot">auto</i>
+              </td>
+            </tr>`
+
+            document.getElementById("scan-table-output-id").innerHTML += rowTemplate;
+        });
+        break;
+      }
+    }
+
+    async function fetchToCheckNetwork() {
+      return await fetch("/lynk/v2/get-scan-network", { method: "GET" }).then(
+        (res) => res.json()
+      );
+    }
+
+    /**************** PRIVATE *******************/
     function openTab(evt, tabName) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("tab");
@@ -366,44 +436,25 @@
       evt.currentTarget.className += " active";
     }
 
-    /**
-     * Open Modal
-     */
     function openModal(id) {
+      let loaddingElm = `
+            <tr id="scan-loadding">
+              <td colspan="3"><i style="cursor: pointer;" class="fas fa-robot">Đang quét, vui lòng chờ...</i></td>
+            </tr>`
+
+      if (id === "addableModal") {
+        document.getElementById("scan-table-output-id").innerHTML = loaddingElm;
+        document.getElementById("add-button-id").setAttribute("disabled", "disabled");
+        getScanNetwork();
+      }
+
       document.getElementById(id).style.display = "block";
     }
 
-    /**
-     * Close Modal
-     */
     function closeModal(id) {
       document.getElementById(id).style.display = "none";
     }
 
-    /**
-     * Screen has been loaded
-     */
-    document.addEventListener("DOMContentLoaded", function (event) {
-      initialize();
-    });
-
-    /**
-     * Get data when init screen
-     */
-    function initialize() {
-
-      // Get main-device info
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/api/main-device-info');
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-
-        }
-      };
-
-      /**  Send **/
-      xhr.send();
-    }
   </script>
 </body>
 
