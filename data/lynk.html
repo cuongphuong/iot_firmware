@@ -140,11 +140,6 @@
       cursor: pointer;
     }
 
-    .btn-tmp {
-      background-color: rgb(161, 194, 195);
-      border: solid 1px green;
-    }
-
     .btn-left {
       left: 50px
     }
@@ -152,14 +147,19 @@
     .btn-right {
       left: 5px;
     }
+
+    .new_device .btn-right {
+      background-color: rgb(161, 194, 195);
+      border: solid 1px green;
+    }
   </style>
 </head>
 
 <body>
   <div class="tab-container" style="border: solid 1px;">
-    <button class="tablinks active" onclick="openTab(event, 'tab1')">Load device</button>
-    <button class="tablinks" onclick="openTab(event, 'tab2')">Button</button>
-    <button class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
+    <button id="tab1ID" class="tablinks active" onclick="openTab(event, 'tab1')">Load device</button>
+    <button id="tab2ID" class="tablinks" onclick="openTab(event, 'tab2')">Button</button>
+    <button id="tab3ID"class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
     <input type="hidden" id="tab-selected" value="tab1" />
   </div>
 
@@ -184,23 +184,8 @@
                   <th>　　　　　</th>
                 </tr>
               </thead>
-              <tbody id="added_device_table_id">
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
+              <tbody id="added_device_table_tab1">
+
               </tbody>
             </table>
           </div>
@@ -228,23 +213,7 @@
                   <th>　　　　　</th>
                 </tr>
               </thead>
-              <tbody id="added_device_table_id">
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
+              <tbody id="added_device_table_tab2">
               </tbody>
             </table>
           </div>
@@ -272,30 +241,15 @@
                   <th>　　　　　</th>
                 </tr>
               </thead>
-              <tbody id="added_device_table_id">
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000001</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="added_device_name_clss">L_LOAD_YNK000002</td>
-                  <td>192.168.121.121</td>
-                  <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteLynkDeviceOnClick()">“␡”</button>
-                    <button class="btn-table btn-right btn-tmp" onclick="openModal('editableModal')">“✎”</button>
-                  </td>
-                </tr>
+              <tbody id="added_device_table_tab3">
+
               </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
-    <button style="margin-top: 10px" onclick="">Lưu danh sách</button>
+    <button style="margin-top: 10px" onclick="saveDeviceList()">Lưu danh sách</button>
   </div>
 
   <!-- Modal add -->
@@ -362,17 +316,23 @@
   <script>
 
     /** Const defind **/
-    const LOAD_DEVICE_PREFIX = "L_LOAD";
-    const BUTTON_DEVICE_PREFIX = "L_PRS";
-    const SENSOR_DEVICE_PREFIX = "L_SER";
+    const LOAD_DEVICE_PREFIX = "L_LOAD";   // L_LOAD_LD001_ID000001
+    const BUTTON_DEVICE_PREFIX = "L_PRSS"; // L_PRSS_PR001_ID000002
+    const SENSOR_DEVICE_PREFIX = "L_SERS"; // L_SERS_PR001_ID000003
+
+    let wifiInfo = {};
 
     document.addEventListener("DOMContentLoaded", function (event) {
       document.getElementById("tab1").style.display = "block";
       initialize();
     });
 
-    function initialize() {
+    async function initialize() {
+      let response = await fetch("/lynk/v2/get-wifi-info").then(res => res.json());
+      wifiInfo = response;
 
+      let deviceList = await fetch("/lynk/v2/get-device-list").then(res => res.json());
+      setDeviceDataList(deviceList);
     }
 
     async function getScanNetwork() {
@@ -398,9 +358,26 @@
           continue;
         }
 
+        // Xóa danh sách và disable nút thêm trên popup
         document.getElementById("scan-table-output-id").innerHTML = "";
         document.getElementById("add-button-id").removeAttribute("disabled");
+
+        // Danh sách thiết bị hiện tại
+        let arr = Array.from(document.querySelectorAll(".device")).map(item => {
+          let name = item.querySelector(".added_device_name_clss");
+          return name ? name.innerText : null;
+        });
+
+        // Render item nếu không tồn tại trong list thiết bị hiện tại
         response.data.forEach(element => {
+          if (arr.includes(element.SSID)) {
+            return;
+          }
+
+          if (!element.SSID.startsWith(LOAD_DEVICE_PREFIX) && !element.SSID.startsWith(BUTTON_DEVICE_PREFIX) && !element.SSID.startsWith(SENSOR_DEVICE_PREFIX)) {
+            return;
+          }
+
           let rowTemplate = `
             <tr>
               <td><input type="checkbox" name="add-checkbox" id="ck_${element.SSID}" data-name="${element.SSID}"></td>
@@ -411,7 +388,7 @@
               </td>
             </tr>`
 
-            document.getElementById("scan-table-output-id").innerHTML += rowTemplate;
+          document.getElementById("scan-table-output-id").innerHTML += rowTemplate;
         });
         break;
       }
@@ -427,20 +404,118 @@
       let tabDestination = document.getElementById("tab-selected").value;
       let checkedBoxes = document.querySelectorAll('input[name=add-checkbox]:checked');
 
-      checkedBoxes.forEach(function(checked) {
+      checkedBoxes.forEach(function (checked) {
         let name = checked.getAttribute("data-name");
         let ip = document.getElementById(`ipv4_${name}`).value;
-        console.log(name, ip);
+        let rowTemplate = `
+                <tr class="device new_device" id="dv_${name}">
+                  <td class="added_device_name_clss">${name}</td>
+                  <td class="added_device_wifiname" style="display: none;">${wifiInfo.SSID}</td>
+                  <td class="added_device_password" style="display: none;">${wifiInfo.PASS}</td>
+                  <td class="added_device_ipv4">${ip}</td>
+                  <td class="added_device_gateway" style="display: none;">${wifiInfo.GATEWAY}</td>
+                  <td class="added_device_subnetmask" style="display: none;">${wifiInfo.MASK}</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteDeviceOnClick('${name}')">“␡”</button>
+                    <button class="btn-table btn-right" onclick="editDeviceOnClick('${name}')">“✎”</button>
+                  </td>
+                </tr>`
+
+        if (name.startsWith(LOAD_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab1", document.getElementById("tab1ID"));
+        }
+
+        if (name.startsWith(BUTTON_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab2", document.getElementById("tab2ID"));
+        }
+
+        if (name.startsWith(SENSOR_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab3", document.getElementById("tab3ID"));
+        }
+      });
+      closeModal('addableModal');
+    }
+
+    function editDeviceOnClick(name) {
+      let item = document.getElementById(`dv_${name}`);
+      let wifiName = item.querySelector(".added_device_wifiname");
+      let password = item.querySelector(".added_device_password");
+      let ipv4 = item.querySelector(".added_device_ipv4");
+      let gateway = item.querySelector(".added_device_gateway");
+      let subnetmask = item.querySelector(".added_device_subnetmask");
+
+      document.getElementById("add_device_user").value = wifiName.innerText;
+      document.getElementById("add_device_password").value = password.innerText;
+      document.getElementById("add_device_sip").value = ipv4.innerText;
+      document.getElementById("add_device_gateway").value = gateway.innerText;
+      document.getElementById("add_device_submark").value = subnetmask.innerText;
+      openModal('editableModal');
+    }
+
+    function deleteDeviceOnClick(name) {
+      if (confirm(`Do you want to delete "${name}"`) != true) {
+        return;
+      }
+      document.getElementById(`dv_${name}`).remove();
+    }
+
+    function saveDeviceList() {
+      if (confirm(`Do you want to save`) != true) {
+        return;
+      }
+
+      let deviceList = document.querySelectorAll(".new_device");
+      let requestList = [];
+
+      deviceList.forEach(function (device) {
+        let name = device.querySelector(".added_device_name_clss").innerText;
+        let wifiname = device.querySelector(".added_device_wifiname").innerText;
+        let password = device.querySelector(".added_device_password").innerText;
+        let ipv4 = device.querySelector(".added_device_ipv4").innerText;
+        let gateway = device.querySelector(".added_device_gateway").innerText;
+        let subnetmask = device.querySelector(".added_device_subnetmask").innerText;
+
+        let deviceInfo = parseDeviceString(name);
+        requestList.push({
+          deviceNo: deviceInfo.deviceNo,
+          deviceName: name,
+          deviceType: deviceInfo.type,
+          deviceModel: deviceInfo.model,
+
+          wifiName: wifiname,
+          wifiPass: password,
+          ipAddress: ipv4,
+          gateway: gateway,
+          subnetMark: subnetmask,
+
+        });
       });
 
+      // Debugging
+      console.log(JSON.stringify(requestList));
 
-      if (tabDestination === "tab1") {
-        
-      }
+      fetch("/api/save-device-list", {
+        method: "POST",
+        body: JSON.stringify(requestList),
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.msg == "success") {
+            alert("Lưu thông tin thành công!");
+          } else {
+            alert(res.msg);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
 
     /**************** PRIVATE *******************/
-    function openTab(evt, tabName) {
+    function openTab(evt, tabName, elm) {
       var i, tabcontent, tablinks;
       tabcontent = document.getElementsByClassName("tab");
       for (i = 0; i < tabcontent.length; i++) {
@@ -452,7 +527,13 @@
       }
       document.getElementById(tabName).style.display = "block";
       document.getElementById("tab-selected").value = tabName;
-      evt.currentTarget.className += " active";
+
+      if (!elm) {
+        evt.currentTarget.className += " active";
+      } else {
+        elm.className += " active";
+      }
+      
     }
 
     function openModal(id) {
@@ -472,6 +553,54 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = "none";
+    }
+
+    function parseDeviceString(deviceString) {
+      const regex = /^L_(LOAD|PRSS|SERS)_(LD\d{3}|PR\d{3})_ID(\d{6})$/;
+      const match = deviceString.match(regex);
+
+      if (match) {
+        return {
+          type: match[1],
+          model: match[2],
+          deviceNo: Number(match[3])
+        };
+      } else {
+        alert(`Invalid device string format: ${deviceString}`);
+      }
+    }
+
+    function setDeviceDataList(deviceList) {
+      deviceList.forEach(function (device) {
+        let rowTemplate = `
+                <tr class="device" id="dv_${device.deviceName}">
+                  <td class="added_device_name_clss">${device.deviceName}</td>
+                  <td class="added_device_wifiname" style="display: none;">${device.wifiName}</td>
+                  <td class="added_device_password" style="display: none;">${device.wifiPass}</td>
+                  <td class="added_device_ipv4">${device.ipAddress}</td>
+                  <td class="added_device_gateway" style="display: none;">${device.gateway}</td>
+                  <td class="added_device_subnetmask" style="display: none;">${device.subnetMark}</td>
+                  <td style="position: relative">
+                    <button class="btn-table btn-left" onclick="deleteDeviceOnClick('${device.deviceName}')">“␡”</button>
+                    <button class="btn-table btn-right" onclick="editDeviceOnClick('${device.deviceName}')">“✎”</button>
+                  </td>
+                </tr>`
+
+        if (device.deviceName.startsWith(LOAD_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab1", document.getElementById("tab1ID"));
+        }
+
+        if (device.deviceName.startsWith(BUTTON_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab2", document.getElementById("tab2ID"));
+        }
+
+        if (device.deviceName.startsWith(SENSOR_DEVICE_PREFIX)) {
+          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          openTab(null, "tab3", document.getElementById("tab3ID"));
+        }
+      });
     }
 
   </script>
