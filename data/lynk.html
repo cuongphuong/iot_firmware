@@ -159,7 +159,7 @@
   <div class="tab-container" style="border: solid 1px;">
     <button id="tab1ID" class="tablinks active" onclick="openTab(event, 'tab1')">Load device</button>
     <button id="tab2ID" class="tablinks" onclick="openTab(event, 'tab2')">Button</button>
-    <button id="tab3ID"class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
+    <button id="tab3ID" class="tablinks" onclick="openTab(event, 'tab3')">Sensor device</button>
     <input type="hidden" id="tab-selected" value="tab1" />
   </div>
 
@@ -185,7 +185,10 @@
                 </tr>
               </thead>
               <tbody id="added_device_table_tab1">
-
+                <tr id="scan-loadding">
+                  <td colspan="3"><i style="cursor: pointer;" class="fas fa-robot">Đang tải danh sách, vui lòng
+                      chờ...</i></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -318,9 +321,10 @@
     /** Const defind **/
     const LOAD_DEVICE_PREFIX = "L_LOAD";   // L_LOAD_LD001_ID000001
     const BUTTON_DEVICE_PREFIX = "L_PRSS"; // L_PRSS_PR001_ID000002
-    const SENSOR_DEVICE_PREFIX = "L_SERS"; // L_SERS_PR001_ID000003
+    const SENSOR_DEVICE_PREFIX = "L_SERS"; // L_SERS_SR001_ID000003
 
     let wifiInfo = {};
+    let glDeviceList = [];
 
     document.addEventListener("DOMContentLoaded", function (event) {
       document.getElementById("tab1").style.display = "block";
@@ -328,11 +332,34 @@
     });
 
     async function initialize() {
+      // Disable button before loaded
+      document.querySelectorAll(".button-fixed1").forEach(item => item.setAttribute("disabled", "disabled"));
+      document.querySelectorAll(".button-fixed2").forEach(item => item.setAttribute("disabled", "disabled"));
+
+      // Get wifi info from API
       let response = await fetch("/lynk/v2/get-wifi-info").then(res => res.json());
       wifiInfo = response;
 
-      let deviceList = await fetch("/lynk/v2/get-device-list").then(res => res.json());
-      setDeviceDataList(deviceList);
+      // Get device list from API
+      fetch("/lynk/v2/get-device-list").then(res => res.json()).then(deviceList => {
+        // Save device list
+        glDeviceList = [...deviceList];
+        console.log("glDeviceList: ", glDeviceList);
+
+        // Set device list to screen
+        setDeviceDataList(deviceList);
+
+        // Enable button after loaded
+        document.querySelectorAll(".button-fixed1").forEach(item => item.removeAttribute("disabled"));
+        document.querySelectorAll(".button-fixed2").forEach(item => item.removeAttribute("disabled"));
+        document.getElementById("scan-loadding").remove();
+
+      }).catch(err => {
+        // Enable button after loaded
+        document.querySelectorAll(".button-fixed1").forEach(item => item.removeAttribute("disabled"));
+        document.querySelectorAll(".button-fixed2").forEach(item => item.removeAttribute("disabled"));
+        document.querySelector("#scan-loadding i").innerHTML = "Tải lỗi, vui lòng thử lại";
+      });
     }
 
     async function getScanNetwork() {
@@ -467,7 +494,7 @@
         return;
       }
 
-      let deviceList = document.querySelectorAll(".new_device");
+      let deviceList = document.querySelectorAll(".device");
       let requestList = [];
 
       deviceList.forEach(function (device) {
@@ -479,19 +506,33 @@
         let subnetmask = device.querySelector(".added_device_subnetmask").innerText;
 
         let deviceInfo = parseDeviceString(name);
-        requestList.push({
-          deviceNo: deviceInfo.deviceNo,
-          deviceName: name,
-          deviceType: deviceInfo.type,
-          deviceModel: deviceInfo.model,
+        let currentDevice = glDeviceList.find(item => item.deviceNo === deviceInfo.deviceNo);
 
-          wifiName: wifiname,
-          wifiPass: password,
-          ipAddress: ipv4,
-          gateway: gateway,
-          subnetMark: subnetmask,
+        // TH device đã tồn tại
+        if (currentDevice) {
+          currentDevice.wifiName = wifiname;
+          currentDevice.wifiPass = password;
+          currentDevice.ipAddress = ipv4;
+          currentDevice.gateway = gateway;
+          currentDevice.subnetMark = subnetmask;
+          requestList.push(currentDevice);
 
-        });
+        } else {
+          requestList.push({
+            deviceNo: deviceInfo.deviceNo,
+            deviceName: name,
+            deviceType: deviceInfo.type,
+            deviceModel: deviceInfo.model,
+
+            // Update information
+            wifiName: wifiname,
+            wifiPass: password,
+            ipAddress: ipv4,
+            gateway: gateway,
+            subnetMark: subnetmask,
+
+          });
+        }
       });
 
       // Debugging
@@ -533,7 +574,7 @@
       } else {
         elm.className += " active";
       }
-      
+
     }
 
     function openModal(id) {
@@ -556,7 +597,7 @@
     }
 
     function parseDeviceString(deviceString) {
-      const regex = /^L_(LOAD|PRSS|SERS)_(LD\d{3}|PR\d{3})_ID(\d{6})$/;
+      const regex = /^L_(LOAD|PRSS|SERS)_(LD\d{3}|PR\d{3}|SR\d{3})_ID(\d{6})$/;
       const match = deviceString.match(regex);
 
       if (match) {
