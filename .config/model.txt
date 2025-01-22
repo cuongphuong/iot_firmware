@@ -1,0 +1,17 @@
+[
+  {
+    "model": "LD001",
+    "numberOfPin": 3,
+    "pin":[ 1, 5, 6]
+  },
+  {
+    "model": "PR001",
+    "numberOfPin": 3,
+    "pin": [ 1, 5, 6]
+  },
+  {
+    "model": "SR001",
+    "numberOfPin": 1,
+    "pin": [1]
+  }
+]
