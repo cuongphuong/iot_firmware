@@ -1,12 +1,12 @@
 [
   {
     "model": "LD001",
-    "numberOfPin": 3,
+    "numberOfPin": 6,
     "pin":[23, 22, 21, 19, 16, 17]
   },
   {
     "model": "PR001",
-    "numberOfPin": 3,
+    "numberOfPin": 6,
     "pin": [13, 14, 27, 26, 25, 33]
   }
 ]
