@@ -152,6 +152,40 @@
       background-color: rgb(161, 194, 195);
       border: solid 1px green;
     }
+
+    .cpg-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cpg-th,
+    .cpg-td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .cpg-th {
+      background-color: #f4f4f4;
+    }
+
+    .cpg-hidden {
+      display: none;
+    }
+
+    .cpg-expand-btn {
+      cursor: pointer;
+      color: blue;
+    }
+
+    .cpg-child {
+      margin-left: 50px;
+      cursor: pointer;
+    }
+
+    .cpg-child .cpg-td {
+      padding-left: 20px;
+    }
   </style>
 </head>
 
@@ -171,14 +205,14 @@
           <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
           <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
           <div style="overflow-x: scroll;">
-            <table>
+            <table class="cpg-table">
               <colgroup>
                 <col style="width: auto;">
                 <col style="width: 120px;">
                 <col style="width: 95px;">
               </colgroup>
               <thead>
-                <tr>
+                <tr class="cpg-tr">
                   <th>Name</th>
                   <th>IP(v4)</th>
                   <th>　　　　　</th>
@@ -203,14 +237,14 @@
           <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
           <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
           <div style="overflow-x: scroll;">
-            <table>
+            <table class="cpg-table">
               <colgroup>
                 <col style="width: auto;">
                 <col style="width: 120px;">
                 <col style="width: 95px;">
               </colgroup>
               <thead>
-                <tr>
+                <tr class="cpg-tr">
                   <th>Name</th>
                   <th>IP(v4)</th>
                   <th>　　　　　</th>
@@ -231,14 +265,14 @@
           <button class="button-fixed1" onclick="deleteAllDevice()">Xóa tất cả</button>
           <button class="button-fixed2" onclick="openModal('addableModal')">Quét</button>
           <div style="overflow-x: scroll;">
-            <table>
+            <table class="cpg-table">
               <colgroup>
                 <col style="width: auto;">
                 <col style="width: 120px;">
                 <col style="width: 95px;">
               </colgroup>
               <thead>
-                <tr>
+                <tr class="cpg-tr">
                   <th>Name</th>
                   <th>IP(v4)</th>
                   <th>　　　　　</th>
@@ -316,12 +350,81 @@
     </div>
   </div>
 
+  <!-- Modal detail button -->
+  <div id="detailButtonModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('detailButtonModal')">&times;</span>
+      <div style="margin-top: 16px; border: solid 1px; padding: 10px;">
+        <div class="form">
+          <div class="form-group">
+            <label for="view_virtual_pin_link1">Virtual PIN liên kết</label><br>
+            <select style="width: 206px;" id="view_virtual_pin_link1">
+              <option value="0">Chưa cài đặt</option>
+              <option value="1">V1</option>
+              <option value="2">V2</option>
+              <option value="3">V3</option>
+              <option value="4">V4</option>
+              <option value="5">V5</option>
+              <option value="6">V6</option>
+              <option value="7">V7</option>
+              <option value="8">V8</option>
+              <option value="9">V9</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="add_device_user">Thông tin kỹ thuật</label><br>
+            <textarea style="height: 200px; width: 100%;" id="view_device_info1" readonly
+              disabled>Loadding...</textarea>
+          </div>
+        </div>
+        <input id="add-button-id" onclick="completeEdit(1)" type="submit" value="Xong">
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal detail button -->
+  <div id="detailLoadDeviceModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('detailLoadDeviceModal')">&times;</span>
+      <div style="margin-top: 16px; border: solid 1px; padding: 10px;">
+        <div class="form">
+          <div class="form-group">
+            <label for="view_virtual_pin_link2">Virtual PIN liên kết</label><br>
+            <select style="width: 206px;" id="view_virtual_pin_link2">
+              <option value="0">Chưa cài đặt</option>
+              <option value="1">V1</option>
+              <option value="2">V2</option>
+              <option value="3">V3</option>
+              <option value="4">V4</option>
+              <option value="5">V5</option>
+              <option value="6">V6</option>
+              <option value="7">V7</option>
+              <option value="8">V8</option>
+              <option value="9">V9</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="loadName_id2">Tên hiển thị</label><br>
+            <input style="width: 200px;" type="text" id="loadName_id2">
+          </div>
+          <div class="form-group">
+            <label for="view_device_info2">Thông tin kỹ thuật</label><br>
+            <textarea style="height: 200px; width: 100%;" id="view_device_info2" readonly
+              disabled>Loadding...</textarea>
+          </div>
+        </div>
+        <input id="add-button-id" onclick="completeEdit(2)" type="submit" value="Xong">
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="device_edit_id">
+  <input type="hidden" id="pinNo_edit_id">
   <script>
 
     /** Const defind **/
-    const LOAD_DEVICE_PREFIX = "L_LOAD";   // L_LOAD_LD001_ID000001
-    const BUTTON_DEVICE_PREFIX = "L_PRSS"; // L_PRSS_PR001_ID000002
-    const SENSOR_DEVICE_PREFIX = "L_SERS"; // L_SERS_SR001_ID000003
+    const LOAD_DEVICE_PREFIX = "L_LOAD";   /** L_LOAD_LD001_ID000001 **/
+    const BUTTON_DEVICE_PREFIX = "L_PRSS"; /** L_PRSS_PR001_ID000002 **/
+    const SENSOR_DEVICE_PREFIX = "L_SERS"; /** L_SERS_SR001_ID000003 **/
 
     let wifiInfo = {};
     let glDeviceList = [];
@@ -332,52 +435,73 @@
     });
 
     async function initialize() {
-      // Disable button before loaded
+      /** Disable button before loaded **/
       document.querySelectorAll(".button-fixed1").forEach(item => item.setAttribute("disabled", "disabled"));
       document.querySelectorAll(".button-fixed2").forEach(item => item.setAttribute("disabled", "disabled"));
 
-      // Get wifi info from API
+      /** Get wifi info from API **/
       let response = await fetch("/lynk/v2/get-wifi-info").then(res => res.json());
       wifiInfo = response;
 
-      // Get device list from API
+      /** Get device list from API **/
       fetch("/lynk/v2/get-device-list").then(res => res.json()).then(deviceList => {
-        // Save device list
+        /** Save device list **/
         glDeviceList = [...deviceList];
         console.log("glDeviceList: ", glDeviceList);
 
-        // Set device list to screen
+        /** Set device list to screen  **/
         setDeviceDataList(deviceList);
 
-        // Enable button after loaded
+        /** Enable button after loaded  **/
         document.querySelectorAll(".button-fixed1").forEach(item => item.removeAttribute("disabled"));
         document.querySelectorAll(".button-fixed2").forEach(item => item.removeAttribute("disabled"));
         document.getElementById("scan-loadding").remove();
 
       }).catch(err => {
-        // Enable button after loaded
+        /** Enable button after loaded  **/
         document.querySelectorAll(".button-fixed1").forEach(item => item.removeAttribute("disabled"));
         document.querySelectorAll(".button-fixed2").forEach(item => item.removeAttribute("disabled"));
         document.querySelector("#scan-loadding i").innerHTML = "Tải lỗi, vui lòng thử lại";
       });
     }
 
+    function registEventTable() {
+      document.querySelectorAll('.cpg-expand-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          let parentRow = this.closest('tr');
+          let parentId = parentRow.getAttribute('data-id');
+          let childRows = document.querySelectorAll(`.cpg-child[data-parent='${parentId}']`);
+          let isVisible = !childRows[0].classList.contains('cpg-hidden');
+
+          // Đóng tất cả các phần tử đang mở
+          document.querySelectorAll('.cpg-child:not(.cpg-hidden)').forEach(row => {
+            row.classList.add('cpg-hidden');
+          });
+
+          // Nếu phần tử đang mở, thì đóng nó, nếu không thì mở
+          if (!isVisible) {
+            childRows.forEach(row => row.classList.remove('cpg-hidden'));
+          }
+        });
+      });
+    }
+
     async function getScanNetwork() {
-      // Reset last scanning
+      /** Reset last scanning  **/
       let numberOfCheck = 0;
 
-      // Start scanning
+      /** Start scanning  **/
       fetch("/lynk/v2/start-scan-network", { method: "GET" });
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Check scan result
+      /** Check scan result  **/
       while (true) {
         if (numberOfCheck == 5) {
           alert("Scan result failed, please try again.");
           break;
         }
 
-        // Get the network from API
+        /** Get the network from API  **/
         const response = await fetchToCheckNetwork();
         if (response.data == null) {
           await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -385,17 +509,17 @@
           continue;
         }
 
-        // Xóa danh sách và disable nút thêm trên popup
+        /** Xóa danh sách và disable nút thêm trên popup  **/
         document.getElementById("scan-table-output-id").innerHTML = "";
         document.getElementById("add-button-id").removeAttribute("disabled");
 
-        // Danh sách thiết bị hiện tại
+        /** Danh sách thiết bị hiện tại  **/
         let arr = Array.from(document.querySelectorAll(".device")).map(item => {
           let name = item.querySelector(".added_device_name_clss");
           return name ? name.innerText : null;
         });
 
-        // Render item nếu không tồn tại trong list thiết bị hiện tại
+        /** Render item nếu không tồn tại trong list thiết bị hiện tại  **/
         response.data.forEach(element => {
           if (arr.includes(element.SSID)) {
             return;
@@ -436,7 +560,7 @@
         let ip = document.getElementById(`ipv4_${name}`).value;
         let rowTemplate = `
                 <tr class="device new_device" id="dv_${name}">
-                  <td class="added_device_name_clss">${name}</td>
+                  <td class="added_device_name_clss" onclick="detailButtonOnClick()">${name}</td>
                   <td class="added_device_wifiname" style="display: none;">${wifiInfo.SSID}</td>
                   <td class="added_device_password" style="display: none;">${wifiInfo.PASS}</td>
                   <td class="added_device_ipv4">${ip}</td>
@@ -482,6 +606,82 @@
       openModal('editableModal');
     }
 
+    async function detailButtonOnClick(deviceNo, pinNo) {
+      document.getElementById("view_device_info1").value = "Loadding..."
+      document.getElementById("view_virtual_pin_link1").value = "0";
+
+      // Set info processing
+      document.getElementById("device_edit_id").value = deviceNo;
+      document.getElementById("pinNo_edit_id").value = pinNo;
+
+      for (let i = 0; i < glDeviceList.length; i++) {
+        if (glDeviceList[i].deviceNo == deviceNo) {
+          for (let j = 0; j < glDeviceList[i].deviceState.length; j++) {
+            if (glDeviceList[i].deviceState[j].gpioPin == pinNo) {
+              document.getElementById("view_virtual_pin_link1").value = glDeviceList[i].deviceState[j].lynkPioPin;
+              break;
+            }
+          }
+        }
+      }
+
+      openModal('detailButtonModal');
+
+      let response = await fetch(`/lynk/v2/detail-pin?deviceNo=${deviceNo.trim()}&pinNo=${pinNo.trim()}`).then(res => res.json());
+      document.getElementById("view_device_info1").value = JSON.stringify(response, null, 2);
+    }
+
+    async function detailLoadDeviceOnClick(deviceNo, pinNo) {
+      document.getElementById("view_device_info2").value = "Loadding..."
+      document.getElementById("view_virtual_pin_link2").value = "0";
+      document.getElementById("loadName_id2").value = "";
+
+      // Set info processing
+      document.getElementById("device_edit_id").value = deviceNo;
+      document.getElementById("pinNo_edit_id").value = pinNo;
+
+      for (let i = 0; i < glDeviceList.length; i++) {
+        if (glDeviceList[i].deviceNo == deviceNo) {
+          for (let j = 0; j < glDeviceList[i].deviceState.length; j++) {
+            if (glDeviceList[i].deviceState[j].gpioPin == pinNo) {
+              document.getElementById("view_virtual_pin_link2").value = glDeviceList[i].deviceState[j].lynkPioPin;
+              document.getElementById("loadName_id2").value = glDeviceList[i].deviceState[j].loadName;
+              break;
+            }
+          }
+        }
+      }
+
+      openModal('detailLoadDeviceModal');
+
+      let response = await fetch(`/lynk/v2/detail-pin?deviceNo=${deviceNo.trim()}&pinNo=${pinNo.trim()}`).then(res => res.json());
+      document.getElementById("view_device_info2").value = JSON.stringify(response, null, 2);
+    }
+
+    function completeEdit(modalType) {
+      let deviceNo = document.getElementById("device_edit_id").value;
+      let pinNo = document.getElementById("pinNo_edit_id").value;
+      closeModal("detailButtonModal");
+      closeModal("detailLoadDeviceModal");
+
+      for (let i = 0; i < glDeviceList.length; i++) {
+        if (glDeviceList[i].deviceNo == deviceNo) {
+          for (let j = 0; j < glDeviceList[i].deviceState.length; j++) {
+            if (glDeviceList[i].deviceState[j].gpioPin == pinNo) {
+              if (modalType == 1) {
+                glDeviceList[i].deviceState[j].lynkPioPin = Number(document.getElementById("view_virtual_pin_link1").value);
+              }
+
+              if (modalType == 2) {
+                glDeviceList[i].deviceState[j].lynkPioPin = Number(document.getElementById("view_virtual_pin_link2").value);
+                glDeviceList[i].deviceState[j].loadName = document.getElementById("loadName_id2").value;
+              }
+            }
+          }
+        }
+      }
+    }
+
     function deleteDeviceOnClick(name) {
       if (confirm(`Do you want to delete "${name}"`) != true) {
         return;
@@ -508,7 +708,7 @@
         let deviceInfo = parseDeviceString(name);
         let currentDevice = glDeviceList.find(item => item.deviceNo === deviceInfo.deviceNo);
 
-        // TH device đã tồn tại
+        /** TH device đã tồn tại  **/
         if (currentDevice) {
           currentDevice.wifiName = wifiname;
           currentDevice.wifiPass = password;
@@ -516,7 +716,6 @@
           currentDevice.gateway = gateway;
           currentDevice.subnetMark = subnetmask;
           requestList.push(currentDevice);
-
         } else {
           requestList.push({
             deviceNo: deviceInfo.deviceNo,
@@ -524,18 +723,17 @@
             deviceType: deviceInfo.type,
             deviceModel: deviceInfo.model,
 
-            // Update information
+            /** Update information  **/
             wifiName: wifiname,
             wifiPass: password,
             ipAddress: ipv4,
             gateway: gateway,
             subnetMark: subnetmask,
-
           });
         }
       });
 
-      // Debugging
+      /** Debugging  **/
       console.log(JSON.stringify(requestList));
 
       fetch("/api/save-device-list", {
@@ -614,18 +812,30 @@
     function setDeviceDataList(deviceList) {
       deviceList.forEach(function (device) {
         let rowTemplate = `
-                <tr class="device" id="dv_${device.deviceName}">
-                  <td class="added_device_name_clss">${device.deviceName}</td>
+                <tr class="device cpg-parent cpg-tr" id="dv_${device.deviceName}" data-id="${device.deviceNo}">
+                  <td  style="cursor: pointer;" class="added_device_name_clss cpg-expand-btn cpg-td">${device.deviceName}</td>
                   <td class="added_device_wifiname" style="display: none;">${device.wifiName}</td>
                   <td class="added_device_password" style="display: none;">${device.wifiPass}</td>
                   <td class="added_device_ipv4">${device.ipAddress}</td>
                   <td class="added_device_gateway" style="display: none;">${device.gateway}</td>
                   <td class="added_device_subnetmask" style="display: none;">${device.subnetMark}</td>
                   <td style="position: relative">
-                    <button class="btn-table btn-left" onclick="deleteDeviceOnClick('${device.deviceName}')">“␡”</button>
-                    <button class="btn-table btn-right" onclick="editDeviceOnClick('${device.deviceName}')">“✎”</button>
+                    <button class="btn-table btn-left" onclick="deleteDeviceOnClick('${device.deviceName}')" ${device.ipAddress == '0.0.0.0' ? 'disabled' : ''}>“␡”</button>
+                    <button class="btn-table btn-right" onclick="editDeviceOnClick('${device.deviceName}')" ${device.ipAddress == '0.0.0.0' ? 'disabled' : ''}>“✎”</button>
                   </td>
                 </tr>`
+
+        device.deviceState.forEach(function (state) {
+          let clickEvent = device.deviceType === "PRSS"
+            ? `detailButtonOnClick('${device.deviceNo}', '${state.gpioPin}')`
+            : device.deviceType === "LOAD"
+              ? `detailLoadDeviceOnClick('${device.deviceNo}', '${state.gpioPin}')` : "";
+
+          let childRowTemplate = `<tr onclick="${clickEvent}" class="cpg-child cpg-hidden cpg-tr" data-parent="${device.deviceNo}">
+                                    <td class="cpg-td" colspan="3">${device.deviceModel + " (PIN: " + state.gpioPin + ") “✎” "}</td>
+                                  </tr>`;
+          rowTemplate += childRowTemplate;
+        });
 
         if (device.deviceName.startsWith(LOAD_DEVICE_PREFIX)) {
           document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
@@ -633,15 +843,18 @@
         }
 
         if (device.deviceName.startsWith(BUTTON_DEVICE_PREFIX)) {
-          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          document.getElementById(`added_device_table_tab2`).innerHTML += rowTemplate;
           openTab(null, "tab2", document.getElementById("tab2ID"));
         }
 
         if (device.deviceName.startsWith(SENSOR_DEVICE_PREFIX)) {
-          document.getElementById(`added_device_table_tab1`).innerHTML += rowTemplate;
+          document.getElementById(`added_device_table_tab3`).innerHTML += rowTemplate;
           openTab(null, "tab3", document.getElementById("tab3ID"));
         }
       });
+
+      // Đăng ký event khi click vào row của table
+      registEventTable();
     }
 
   </script>
