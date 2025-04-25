@@ -8,5 +8,10 @@
     "model": "PR001",
     "numberOfPin": 6,
     "pin": [13, 14, 27, 26, 25, 33]
+  },
+  {
+    "model": "LD002",
+    "numberOfPin": 2,
+    "pin": [1, 2]
   }
 ]
