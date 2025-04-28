@@ -12,6 +12,6 @@
   {
     "model": "LD002",
     "numberOfPin": 2,
-    "pin": [1, 2]
+    "pin": [0, 1]
   }
 ]
